@@ -86,4 +86,17 @@ class TransactionValidatorTest extends TestCase
         $bankDTO = new BankDTO(sum: 100.5, currency: 'USD');
         $this->assertFalse((new TransactionValidator())->validateTransaction($clientDTO, $bankDTO));
     }
+
+    public function testCustomSumFloat()
+    {
+        $clientDTO = new ClientDTO(sum: 100, currency: 'USD');
+        $bankDTO = new BankDTO(sum: 97.54, currency: 'USD');
+        $this->assertFalse((new TransactionValidator(1))->validateTransaction($clientDTO, $bankDTO));
+    }
+
+    public function testPrecisionPercentError()
+    {
+        $this->expectException(InvalidArgumentException::class);
+        new TransactionValidator(-1);
+    }
 }
