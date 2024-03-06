@@ -40,6 +40,10 @@ class TransactionValidator
 
     private function getPrecisionRange(BankDto $dto): PrecisionRange
     {
+        if ($this->precisionPercent === 0) {
+            return new PrecisionRange((string) $dto->sum, (string) $dto->sum);
+        }
+
         $min = (100 - $this->precisionPercent) / 100;
         $max = (100 + $this->precisionPercent) / 100;
 

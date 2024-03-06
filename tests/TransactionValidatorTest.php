@@ -9,6 +9,34 @@ use Sashapekh\TransactionValidator\Services\TransactionValidator;
 
 class TransactionValidatorTest extends TestCase
 {
+
+    public function testValidateTransactionWithFloatSum2()
+    {
+        $clientDTO = new ClientDTO(sum: 10.5, currency: 'USD');
+        $bankDTO = new BankDTO(sum: 100.5, currency: 'USD');
+        $this->assertFalse((new TransactionValidator())->validateTransaction($clientDTO, $bankDTO));
+    }
+
+    public function testCustomSumFloat()
+    {
+        $clientDTO = new ClientDTO(sum: 100, currency: 'USD');
+        $bankDTO = new BankDTO(sum: 97.54, currency: 'USD');
+        $this->assertFalse((new TransactionValidator(1))->validateTransaction($clientDTO, $bankDTO));
+    }
+
+    public function testPrecisionPercentError()
+    {
+        $this->expectException(InvalidArgumentException::class);
+        new TransactionValidator(-1);
+    }
+
+    public function testPrecisionZeroPercent()
+    {
+        $clientDTO = new ClientDTO(sum: 100, currency: 'USD');
+        $bankDTO = new BankDTO(sum: 90, currency: 'USD');
+        $this->assertFalse((new TransactionValidator(0))->validateTransaction($clientDTO, $bankDTO));
+    }
+
     public function testValidateTransactionWithinDeviation()
     {
         $clientDTO = new ClientDTO(sum: '90', currency: 'USD');
@@ -78,25 +106,5 @@ class TransactionValidatorTest extends TestCase
         $clientDTO = new ClientDTO(sum: 100.5, currency: 'USD');
         $bankDTO = new BankDTO(sum: 100.5, currency: 'USD');
         $this->assertTrue((new TransactionValidator())->validateTransaction($clientDTO, $bankDTO));
-    }
-
-    public function testValidateTransactionWithFloatSum2()
-    {
-        $clientDTO = new ClientDTO(sum: 10.5, currency: 'USD');
-        $bankDTO = new BankDTO(sum: 100.5, currency: 'USD');
-        $this->assertFalse((new TransactionValidator())->validateTransaction($clientDTO, $bankDTO));
-    }
-
-    public function testCustomSumFloat()
-    {
-        $clientDTO = new ClientDTO(sum: 100, currency: 'USD');
-        $bankDTO = new BankDTO(sum: 97.54, currency: 'USD');
-        $this->assertFalse((new TransactionValidator(1))->validateTransaction($clientDTO, $bankDTO));
-    }
-
-    public function testPrecisionPercentError()
-    {
-        $this->expectException(InvalidArgumentException::class);
-        new TransactionValidator(-1);
     }
 }
