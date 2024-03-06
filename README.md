@@ -6,6 +6,6 @@
 
 > `make run` - Run the app
 
-## Main login in `src/Service/TransactionValidator`
+## Main logic in `src/Service/TransactionValidator`
 
 ## Dto in `src/Dto/*`
