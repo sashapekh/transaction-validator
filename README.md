@@ -5,3 +5,7 @@
 > `make build` - Build the app
 
 > `make run` - Run the app
+
+## Main login in `src/Service/TransactionValidator`
+
+## Dto in `src/Dto/*`
